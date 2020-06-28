@@ -3,9 +3,8 @@ const express = require("express");
 const app = express();
 const db = require("./config/keys").mongoURI;
 mongoose
-  .connect(db, { useUnifiedTopology: true, useNewUrlParser: true })
-  .then(() => console.log("Connected to MongoDB successfully"))
-  .catch((err) => console.log(err));
+	.connect(db, { useUnifiedTopology: true, useNewUrlParser: true })
+	.then(() => console.log("Connected to MongoDB successfully"));
 
 app.get("/", (req, res) => res.send("Hello World"));
 
