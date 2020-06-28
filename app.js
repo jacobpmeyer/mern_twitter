@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 
 // Passport
 app.use(passport.initialize());
+require("./config/passport")(passport);
 
 // Test user and tweet routes
 app.use("/api/tweets", tweets);
