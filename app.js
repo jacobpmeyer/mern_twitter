@@ -14,7 +14,7 @@ mongoose
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Test Routes
+// Test user and tweet routes
 app.get("/", (req, res) => res.send("Jello Squirell"));
 app.use("/api/tweets", tweets);
 app.use("/api/users", users);
