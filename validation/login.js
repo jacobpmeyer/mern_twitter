@@ -1,0 +1,28 @@
+const Validator = require("validator");
+const validText = require("./valid-text");
+
+const validateLoginInput = data => {
+  let errors = {};
+
+  data.email = validText(data.email) ? data.email : "";
+  data.password = validText(data.password) ? data.password : "";
+
+  if (!Validator.isEmail(data.email)) {
+    errors.email = "Email is invalid";
+  }
+
+  if (Validator.isEmpty(data.email)) {
+    errors.email = "Email field must not be empty";
+  }
+
+  if (Validator.isEmpty(data.password)) {
+    errors.password = "Password must not be empty";
+  }
+
+  return {
+    errors,
+    isValid: Object.keys(errors).length === 0,
+  };
+};
+
+module.exports = validateLoginInput;
