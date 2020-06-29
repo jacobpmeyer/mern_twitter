@@ -6,7 +6,7 @@ const validateRegisterInput = data => {
 
   data.handle = validText(data.handle) ? data.handle : "";
   data.email = validText(data.email) ? data.email : "";
-  data.password1 = validText(data.password1) ? data.password1 : "";
+  data.password = validText(data.password) ? data.password : "";
   data.password2 = validText(data.password2) ? data.password2 : "";
 
   if (!Validator.isLength(data.handle, { min: 2, max: 30 })) {
@@ -25,19 +25,19 @@ const validateRegisterInput = data => {
     errors.email = "Email is invalid";
   }
 
-  if (Validator.isEmpty(data.password1)) {
-    errors.password1 = "Password must not be empty";
+  if (Validator.isEmpty(data.password)) {
+    errors.password = "Password must not be empty";
   }
 
-  if (Validator.isLength(data.password1, { min: 6, max: 30 })) {
-    errors.password1 = "Password must be between 6 and 30 characters";
+  if (!Validator.isLength(data.password, { min: 6, max: 30 })) {
+    errors.password = "Password must be between 6 and 30 characters";
   }
 
   if (Validator.isEmpty(data.password2)) {
     errors.password2 = "Password must not be empty";
   }
 
-  if (!Validator.equals(data.password1, data.password2)) {
+  if (!Validator.equals(data.password, data.password2)) {
     errors.password2 = "Passwords must match";
   }
 

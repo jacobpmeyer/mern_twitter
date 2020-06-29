@@ -5,17 +5,26 @@ const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
 const keys = require("../../config/keys");
 const passport = require("passport");
+const validateRegisterInput = require("../../validation/register");
+const validateLoginInput = require("../../validation/login");
 
 router.get("/test", (req, res) => res.json({ msg: "This is the users route" }));
 
 router.post("/register", (req, res) => {
+  // Run validations and store output to errors and isValid
+  const { errors, isValid } = validateRegisterInput(req.body);
+
+  // CHECK TO SEE IF THIS CAN BE A ONE-LINER
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   // Check for anyone already registered that email
   User.findOne({ email: req.body.email }).then(user => {
     if (user) {
       // 400 error if email is already registered
-      return res
-        .status(400)
-        .json({ email: "A user has already registered that email address" });
+      errors.email = "Email already exists";
+      return res.status(400).json(errors);
     } else {
       // Create the new user
       const newUser = new User({
@@ -53,12 +62,19 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const email = req.body.email;
   const password = req.body.password;
 
   User.findOne({ email }).then(user => {
     if (!user) {
-      return res.status(404).json({ email: "This user dose not exist" });
+      errors.email = "This user does not exist";
+      return res.status(404).json(errors);
     }
 
     bcrypt.compare(password, user.password).then(isMatch => {
@@ -77,7 +93,8 @@ router.post("/login", (req, res) => {
           },
         );
       } else {
-        return res.status(400).json({ password: "Incorrect password" });
+        errors.password = "Incorrect password";
+        return res.status(400).json(errors);
       }
     });
   });
