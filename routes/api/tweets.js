@@ -21,4 +21,30 @@ router.get("/user/:user_id", (req, res) => {
     );
 });
 
+router.get("/:id", (req, res) => {
+  Tweet.findById(req.params.id)
+    .then(tweets => res.json(tweets))
+    .catch(err =>
+      res.status(404).json({ notweetsfound: "No tweets found with that ID" }),
+    );
+});
+
+// Protected route for a logged in user to post tweets
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateTweetInput(req.body);
+
+    if (!isValid) return res.status(400).json(errors);
+
+    const newTweet = new Tweet({
+      tweet: req.body.tweet,
+      user: req.user.id,
+    });
+
+    newTweet.save().then(tweet => res.json(tweet));
+  },
+);
+
 module.exports = router;
