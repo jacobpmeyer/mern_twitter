@@ -6,7 +6,7 @@ const TweetSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "users",
   },
-  text: {
+  tweet: {
     type: String,
     required: true,
   },
@@ -16,4 +16,4 @@ const TweetSchema = new Schema({
   },
 });
 
-module.exports = Tweet = mongoose.model("Tweet", TweetSchema);
+module.exports = Tweet = mongoose.model("tweet", TweetSchema);

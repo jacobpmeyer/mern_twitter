@@ -36,14 +36,19 @@ router.post(
   (req, res) => {
     const { errors, isValid } = validateTweetInput(req.body);
 
-    if (!isValid) return res.status(400).json(errors);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
 
     const newTweet = new Tweet({
       tweet: req.body.tweet,
       user: req.user.id,
     });
 
-    newTweet.save().then(tweet => res.json(tweet));
+    newTweet
+      .save()
+      .then(tweet => res.json(tweet))
+      .catch(err => res.status(400).json({ error: err }));
   },
 );
 
