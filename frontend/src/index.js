@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import App from "./app";
 import Root from "./components/root";
 import configureStore from "./store/store";
 import jwt_decode from "jwt-decode";
@@ -18,5 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
         user: decodedUser,
       },
     };
+    store = configureStore(preloadedState);
+    const currentTime = Date.now() / 1000;
+    if (decodedUser.exp < currentTime) {
+      store.dispatch(logout());
+      window.location.href = "/login";
+    }
+  } else {
+    store = configureStore({});
   }
+
+  const root = document.getElementById("root");
+  ReactDOM.render(<Root store={store} />, root);
 });
